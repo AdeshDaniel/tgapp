@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>QR Code Login</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      text-align: center;
+      background: #f9f9f9;
+    }
+    .container {
+      max-width: 320px;
+      margin: auto;
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .qr {
+      width: 280px;
+      height: 280px;
+      margin: 20px 0;
+    }
+    p {
+      font-size: 16px;
+      margin: 10px 0;
+    }
+    .message {
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+    .message.success {
+      color: green;
+    }
+    .message.timeout {
+      color: red;
+    }
+    .timer {
+      font-size: 14px;
+      color: #555;
+    }
+    a.refresh-link {
+      display: inline-block;
+      margin-top: 15px;
+      text-decoration: none;
+      color: #007bff;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Scan QR Code</h2>
+    
+    {% if timeout %}
+      <p class="message timeout">⏱️ QR code expired. Please refresh to generate a new one.</p>
+      <a href="/qr" class="refresh-link">Refresh QR Code</a>
+    {% elif success %}
+      <p class="message success">✅ Successfully logged in!</p>
+    {% else %}
+      <img src="data:image/png;base64,{{ qr }}" alt="QR Code" class="qr" />
+      <p>Scan with Telegram app to login</p>
+      <p class="timer">Expires in <span id="countdown">120</span> seconds</p>
+    {% endif %}
+  </div>
+
+  {% if not timeout and not success %}
+  <script>
+    let timeLeft = 120;
+    const countdownEl = document.getElementById('countdown');
+    
+    const timer = setInterval(() => {
+      timeLeft--;
+      countdownEl.textContent = timeLeft;
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        // Automatically reload to get new QR
+        location.reload();
+      }
+    }, 1000);
+  </script>
+  {% endif %}
+</body>
+</html>

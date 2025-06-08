@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Phone Login</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="container">
+    <h2>Phone Login</h2>
+    {% if phone %}
+    <form method="POST" action="/verify">
+      <input type="hidden" name="phone" value="{{ phone }}">
+      <input type="text" name="code" placeholder="Enter code from Telegram" required>
+      <button type="submit">Verify</button>
+    </form>
+    {% else %}
+    <form method="POST">
+      <input type="text" name="phone" placeholder="Enter phone number" required>
+      <button type="submit">Send Code</button>
+    </form>
+    {% endif %}
+  </div>
+</body>
+</html>
